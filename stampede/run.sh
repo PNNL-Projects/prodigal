@@ -12,10 +12,13 @@ set -u
 QUERY=""
 OUT_DIR="$PWD/prodigal-out"
 CLOSED_ENDS=0
-OUTPUT_FORMAT='gff'
+OUTPUT_FORMAT='gbk'
 NS_AS_MASKED=0
 BYPASS_SHINE_DALGARNO=0
 PROCEDURE='single'
+WRITE_PROT=0
+WRITE_NUCL=0
+WRITE_GENES=0
 IMG="prodigal-2.6.3.img"
 PRODIGAL="singularity exec $IMG prodigal"
 
@@ -37,21 +40,30 @@ function HELP() {
     echo " -q QUERY (dirs/files)"
     echo ""
     echo "Optional arguments:"
+    echo " -a WRITE_PROT ($WRITE_PROT)"
     echo " -c CLOSED_ENDS ($CLOSED_ENDS)"
+    echo " -d WRITE_NUCL ($WRITE_NUCL)"
     echo " -f OUTPUT_FORMAT ($OUTPUT_FORMAT)"
     echo " -m NS_AS_MASKED ($NS_AS_MASKED)"
     echo " -n BYPASS_SHINE_DALGARNO ($BYPASS_SHINE_DALGARNO)"
     echo " -p PROCEDURE ($PROCEDURE)"
+    echo " -s WRITE_GENES ($WRITE_GENES)"
     echo " -o OUT_DIR ($OUT_DIR)"
     exit 0
 }
 
 [[ $# -eq 0 ]] && HELP
 
-while getopts :f:o:p:q:cmnh OPT; do
+while getopts :f:o:p:q:acdhmns OPT; do
     case $OPT in
+      a)
+          WRITE_PROT="1"
+          ;;
       c)
           CLOSED_ENDS="1"
+          ;;
+      d)
+          WRITE_NUCL="1"
           ;;
       f)
           OUTPUT_FORMAT="$OPTARG"
@@ -73,6 +85,9 @@ while getopts :f:o:p:q:cmnh OPT; do
           ;;
       q)
           QUERY="$QUERY $OPTARG"
+          ;;
+      s)
+          WRITE_GENES="1"
           ;;
       :)
           echo "Error: Option -$OPTARG requires an argument."
@@ -111,10 +126,10 @@ echo "Will process NUM_FILES \"$NUM_FILES\""
 
 [[ ! -d "$OUT_DIR" ]] && mkdir -p "$OUT_DIR"
 
-ARGS="-f $OUTPUT_FORMAT -p $PROCEDURE"
-[[ $CLOSED_ENDS -gt 0 ]] && ARGS="$ARGS -c"
-[[ $NS_AS_MASKED -gt 0 ]] && ARGS="$ARGS -m"
-[[ $BYPASS_SHINE_DALGARNO -gt 0 ]] && ARGS="$ARGS -n"
+DEFAULT_ARGS="-f $OUTPUT_FORMAT -p $PROCEDURE"
+[[ $CLOSED_ENDS -gt 0 ]] && DEFAULT_ARGS="$DEFAULT_ARGS -c"
+[[ $NS_AS_MASKED -gt 0 ]] && DEFAULT_ARGS="$DEFAULT_ARGS -m"
+[[ $BYPASS_SHINE_DALGARNO -gt 0 ]] && DEFAULT_ARGS="$DEFAULT_ARGS -n"
 PARAM="$$.param"
 
 i=0
@@ -122,9 +137,16 @@ while read -r FILE; do
     let i++
     BASENAME=$(basename "$FILE")
     printf "%3d: %s\n" $i "$BASENAME"
+
     DIR="$OUT_DIR/$BASENAME"
     [[ ! -d "$DIR" ]] && mkdir -p "$DIR"
-    echo "$PRODIGAL $ARGS -a $DIR/proteins -d $DIR/nucl -i $FILE -o $DIR/prodigal -s $DIR/genes" >> "$PARAM"
+
+    ARGS="$DEFAULT_ARGS -i $FILE -o $DIR/prodigal"
+    [[ $WRITE_PROT  -gt 0 ]] && ARGS="$ARGS -a $DIR/proteins"
+    [[ $WRITE_NUCL  -gt 0 ]] && ARGS="$ARGS -d $DIR/nucl"
+    [[ $WRITE_GENES -gt 0 ]] && ARGS="$ARGS -s $DIR/genes" 
+
+    echo "$PRODIGAL $ARGS" >> "$PARAM"
 done < "$INPUT_FILES"
 
 NJOBS=$(lc "$PARAM")

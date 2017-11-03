@@ -5,22 +5,22 @@
  "defaultMaxRunTime":"12:00:00",
  "defaultNodeCount":1,
  "defaultQueue":"serial",
- "deploymentPath":"kyclark/applications/uproc-1.2.0/stampede",
+ "deploymentPath":"kyclark/applications/prodigal-2.6.3/stampede",
  "deploymentSystem":"data.iplantcollaborative.org",
  "executionSystem":"tacc-stampede-kyclark",
  "executionType":"HPC",
- "helpURI":"",
- "label": "UProC",
- "longDescription":"protein sequence classification",
+ "helpURI":"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2848648/",
+ "label": "Prodigal",
+ "longDescription":"Prokaryotic gene recognition and translation initiation site identification",
  "modules":["singularity"],
- "name":"uproc",
+ "name":"prodigal",
  "ontology":["http://sswapmeet.sswap.info/agave/apps/Application"],
  "parallelism":"SERIAL",
- "shortDescription":"protein sequence classification",
- "tags":["protein"],
+ "shortDescription":"gene prediction",
+ "tags":["prokaryote", "gene", "prediction"],
  "templatePath":"template.sh",
  "testPath":"test.sh",
- "version":"1.2.0",
+ "version":"2.6.3",
  "inputs":[
     {"id":"QUERY",
      "value":
@@ -44,166 +44,122 @@
   ],
   "parameters": [
     {
-      "id": "SEQ_TYPE",
+      "id": "WRITE_PROT",
       "value": {
-          "type": "enumeration",
-          "default": "dna",
+          "type": "flag",
+          "default": "false",
           "order": 1,
           "required": false,
-          "enumValues": [
-            { "dna": "DNA" },
-            { "prot" : "Protein" },
-            { "orf": "ORF" }
-          ],
           "visible": true
       },
       "details": {
-          "description": "Sequence type",
-          "label": "Sequence type",
-          "argument": "-t ",
+          "description": "Write protein translations",
+          "label": "Write proteins",
+          "argument": "-a ",
           "showArgument": true
       }
     },
     {
-      "id": "COUNTS",
+      "id": "CLOSED_ENDS",
       "value": {
-          "type": "string",
-          "default": "0",
+          "type": "flag",
+          "default": "false",
           "order": 2,
           "required": false,
-          "validator": "",
           "visible": true
       },
       "details": {
-          "description": "Print 'FAMILY,COUNT' where COUNT is the number of classifications for FAMILY",
-          "label": "Counts",
+          "description": "Do not allow genes to run off edges",
+          "label": "Closed ends",
           "argument": "-c ",
           "showArgument": true
       }
     },
     {
-      "id": "STATS",
+      "id": "WRITE_NUCL",
       "value": {
-          "type": "string",
-          "default": "0",
+          "type": "flag",
+          "default": "false",
           "order": 3,
           "required": false,
-          "validator": "",
           "visible": true
       },
       "details": {
-          "description": "Print 'CLASSIFIED,UNCLASSIFIED,TOTAL' sequence counts",
-          "label": "Stats",
+          "description": "Write nucleotide sequences of genes",
+          "label": "Write nucleotides",
+          "argument": "-d ",
+          "showArgument": true
+      }
+    },
+    {
+      "id": "OUTPUT_FORMAT",
+      "value": {
+          "type": "enumeration",
+          "default": "gbk",
+          "order": 4,
+          "required": false,
+          "enumValues": [
+            { "gff": "GFF" },
+            { "gbk" : "GenBank" },
+            { "orf": "Simple coordinate output" }
+          ],
+          "visible": true
+      },
+      "details": {
+          "description": "",
+          "label": "Output format",
           "argument": "-f ",
           "showArgument": true
       }
     },
     {
-      "id": "LONG",
+      "id": "NS_AS_MASKED",
       "value": {
-          "type": "string",
-          "default": "0",
-          "order": 4,
-          "required": false,
-          "validator": "",
-          "visible": true
-      },
-      "details": {
-          "description": "Use long read mode (default): Only accept certain ORFs (see -O below) and report all protein scores above the threshold (see PROTEIN THRESHOLD above)",
-          "label": "Long",
-          "argument": "-l ",
-          "showArgument": true
-      }
-    },
-    {
-      "id": "NUMERIC",
-      "value": {
-          "type": "string",
-          "default": "0",
+          "type": "flag",
+          "default": "false",
           "order": 5,
           "required": false,
-          "validator": "",
           "visible": true
       },
       "details": {
-          "description": "If used with PREDS or COUNTS, print the internal numeric representation of the protein families instead of their names.",
-          "label": "Numeric",
-          "argument": "-n ",
+          "description": "Don't build genes across them",
+          "label": "Treat runs of N as masked sequence",
+          "argument": "-m ",
           "showArgument": true
       }
     },
     {
-      "id": "OTHRESH",
+      "id": "PROCEDURE",
       "value": {
           "type": "enumeration",
-          "default": "2",
+          "default": "single",
           "order": 6,
           "required": false,
           "enumValues": [
-            { "0": "Accept all ORFs" },
-            { "1" : "Less restrictive" },
-            { "2": "More restrictive" }
+            { "single": "Single" },
+            { "meta" : "Meta" }
           ],
           "visible": true
       },
       "details": {
-          "description": "ORF translation threshold level",
-          "label": "ORF translation threshold level",
-          "argument": "-O ",
-          "showArgument": true
-      }
-    },
-    {
-      "id": "PTHRESH",
-      "value": {
-          "type": "enumeration",
-          "default": "3",
-          "order": 7,
-          "required": false,
-          "enumValues": [
-            { "0": "Fixed threshold of 0.0" },
-            { "2" : "Less restrictive" },
-            { "3": "More restrictive" }
-          ],
-          "visible": true
-      },
-      "details": {
-          "description": "Protein threshold level",
-          "label": "Protein threshold level",
-          "argument": "-P ",
-          "showArgument": true
-      }
-    },
-    {
-      "id": "PREDS",
-      "value": {
-          "type": "string",
-          "default": "0",
-          "order": 8,
-          "required": false,
-          "validator": "",
-          "visible": true
-      },
-      "details": {
-          "description": "Print all classifications as CSV with the fields specified by FORMAT",
-          "label": "Print classifications",
+          "description": "",
+          "label": "Select procedure",
           "argument": "-p ",
           "showArgument": true
       }
     },
     {
-      "id": "SHORT",
+      "id": "WRITE_GENES",
       "value": {
-          "type": "string",
-          "default": "0",
-          "order": 9,
+          "type": "flag",
+          "default": "false",
+          "order": 7,
           "required": false,
-          "validator": "",
           "visible": true
       },
       "details": {
-          "description": "Use short read mode: Accept all ORFs, report only maximum protein score (if above threshold)",
-          "label": "Short",
+          "description": "",
+          "label": "Write all potential genes (with scores)",
           "argument": "-s ",
           "showArgument": true
       }

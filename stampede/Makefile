@@ -27,3 +27,6 @@ test: clean
 
 imicrobe:
 	sbatch -N 4 -n 4 run.sh -i $(WORK)/iplantc.org/data/imicrobe/projects -o $(WORK)/iplantc.org/data/imicrobe/uproc
+
+files:
+	find /work/05066/imicrobe/iplantc.org/data/imicrobe/projects -type f \( -name \*.fa -o -name \*.fasta -o -name \*.fna \) > files
