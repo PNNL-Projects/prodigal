@@ -7,6 +7,9 @@
 #SBATCH -t 24:00:00
 #SBATCH -A iPlant-Collabs
 
+module load tacc-singularity
+module load launcher
+
 set -u
 
 QUERY=""
@@ -21,9 +24,9 @@ WRITE_NUCL=0
 WRITE_GENES=0
 IMG="prodigal-2.6.3.img"
 PRODIGAL="singularity exec $IMG prodigal"
+PARAMRUN="$TACC_LAUNCHER_DIR/paramrun"
 
-export LAUNCHER_DIR="$HOME/src/launcher"
-export LAUNCHER_PLUGIN_DIR="$LAUNCHER_DIR/plugins"
+export LAUNCHER_PLUGIN_DIR="$TACC_LAUNCHER_DIR/plugins"
 export LAUNCHER_WORKDIR="$PWD"
 export LAUNCHER_RMI="SLURM"
 export LAUNCHER_SCHED="interleaved"
@@ -141,10 +144,10 @@ while read -r FILE; do
     DIR="$OUT_DIR/$BASENAME"
     [[ ! -d "$DIR" ]] && mkdir -p "$DIR"
 
-    ARGS="$DEFAULT_ARGS -i $FILE -o $DIR/prodigal"
-    [[ $WRITE_PROT  -gt 0 ]] && ARGS="$ARGS -a $DIR/proteins"
-    [[ $WRITE_NUCL  -gt 0 ]] && ARGS="$ARGS -d $DIR/nucl"
-    [[ $WRITE_GENES -gt 0 ]] && ARGS="$ARGS -s $DIR/genes" 
+    ARGS="$DEFAULT_ARGS -i $FILE -o $DIR/prodigal.txt"
+    [[ $WRITE_PROT  -gt 0 ]] && ARGS="$ARGS -a $DIR/proteins.txt"
+    [[ $WRITE_NUCL  -gt 0 ]] && ARGS="$ARGS -d $DIR/nucl.txt"
+    [[ $WRITE_GENES -gt 0 ]] && ARGS="$ARGS -s $DIR/genes.txt" 
 
     echo "$PRODIGAL $ARGS" >> "$PARAM"
 done < "$INPUT_FILES"
@@ -152,12 +155,11 @@ done < "$INPUT_FILES"
 NJOBS=$(lc "$PARAM")
 
 if [[ $NJOBS -lt 1 ]]; then
-    echo 'No launcher jobs to run!'
+    echo "No launcher jobs to run!"
 else
     export LAUNCHER_JOB_FILE="$PARAM"
-    [[ $NJOBS -ge 16 ]] && export LAUNCHER_PPN=16
     echo "Starting NJOBS \"$NJOBS\" $(date)"
-    "$LAUNCHER_DIR/paramrun"
+    $PARAMRUN
     echo "Ended LAUNCHER $(date)"
 fi
 

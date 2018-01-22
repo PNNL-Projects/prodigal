@@ -4,10 +4,10 @@
  "defaultProcessorsPerNode":16,
  "defaultMaxRunTime":"12:00:00",
  "defaultNodeCount":1,
- "defaultQueue":"serial",
+ "defaultQueue":"normal",
  "deploymentPath":"kyclark/applications/prodigal-2.6.3/stampede",
  "deploymentSystem":"data.iplantcollaborative.org",
- "executionSystem":"tacc-stampede-kyclark",
+ "executionSystem":"tacc-stampede2-kyclark",
  "executionType":"HPC",
  "helpURI":"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2848648/",
  "label": "Prodigal",
@@ -47,7 +47,7 @@
       "id": "WRITE_PROT",
       "value": {
           "type": "flag",
-          "default": "false",
+          "default": false,
           "order": 1,
           "required": false,
           "visible": true
@@ -63,7 +63,7 @@
       "id": "CLOSED_ENDS",
       "value": {
           "type": "flag",
-          "default": "false",
+          "default": false,
           "order": 2,
           "required": false,
           "visible": true
@@ -79,7 +79,7 @@
       "id": "WRITE_NUCL",
       "value": {
           "type": "flag",
-          "default": "false",
+          "default": false,
           "order": 3,
           "required": false,
           "visible": true
@@ -116,7 +116,7 @@
       "id": "NS_AS_MASKED",
       "value": {
           "type": "flag",
-          "default": "false",
+          "default": false,
           "order": 5,
           "required": false,
           "visible": true
@@ -152,7 +152,7 @@
       "id": "WRITE_GENES",
       "value": {
           "type": "flag",
-          "default": "false",
+          "default": false,
           "order": 7,
           "required": false,
           "visible": true

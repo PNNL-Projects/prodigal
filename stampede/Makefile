@@ -1,4 +1,4 @@
-APP = uproc-1.2.0
+APP = prodigal-2.6.3
 EMAIL = kyclark@email.arizona.edu
 
 clean:
@@ -8,7 +8,7 @@ up:
 	copy_from_manifest.py
 
 template:
-	jobs-template $(APP) > job.json
+	jobs-template -A $(APP) > job.json
 
 job:
 	jobs-submit -F job.json
@@ -30,3 +30,6 @@ imicrobe:
 
 files:
 	find /work/05066/imicrobe/iplantc.org/data/imicrobe/projects -type f \( -name \*.fa -o -name \*.fasta -o -name \*.fna \) > files
+
+fiore:
+	sbatch run.sh -i $(WORK)/iplantc.org/data/imicrobe/projects/103/samples/1661 -o $(WORK)/iplantc.org/data/imicrobe/projects/103/samples/1661
