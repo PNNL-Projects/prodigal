@@ -144,9 +144,9 @@ while read -r FILE; do
     DIR="$OUT_DIR/$BASENAME"
     [[ ! -d "$DIR" ]] && mkdir -p "$DIR"
 
-    ARGS="$DEFAULT_ARGS -i $FILE -o $DIR/prodigal.txt"
-    [[ $WRITE_PROT  -gt 0 ]] && ARGS="$ARGS -a $DIR/proteins.txt"
-    [[ $WRITE_NUCL  -gt 0 ]] && ARGS="$ARGS -d $DIR/nucl.txt"
+    ARGS="$DEFAULT_ARGS -i $FILE -o $DIR/prodigal.${OUTPUT_FORMAT}"
+    [[ $WRITE_PROT  -gt 0 ]] && ARGS="$ARGS -a $DIR/proteins.fa"
+    [[ $WRITE_NUCL  -gt 0 ]] && ARGS="$ARGS -d $DIR/nucl.fa"
     [[ $WRITE_GENES -gt 0 ]] && ARGS="$ARGS -s $DIR/genes.txt" 
 
     echo "$PRODIGAL $ARGS" >> "$PARAM"
