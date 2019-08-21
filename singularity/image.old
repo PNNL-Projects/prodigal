@@ -1,0 +1,42 @@
+BootStrap: docker
+From: ubuntu:latest
+
+%environment
+    PATH=/app/prodigal/bin:$PATH
+
+%runscript
+    exec /app/prodigal/bin/prodigal "$@"
+
+%post
+    apt-get update
+    apt-get install -y locales git wget
+    locale-gen en_US.UTF-8
+
+    #
+    # Put everything into $APP_DIR
+    #
+    export APP_DIR=/app
+    mkdir -p $APP_DIR
+    cd $APP_DIR
+
+    #
+    # Stampede code
+    #
+    cd $APP_DIR
+    git clone https://github.com/hurwitzlab/prodigal.git
+    #python3 -m pip install -r /app/mash/scripts/requirements.txt
+
+    #
+    # Prodigal binary
+    #
+    mkdir /app/prodigal/bin
+    BINARY=/app/prodigal/bin/prodigal 
+    wget -O $BINARY https://github.com/hyattpd/Prodigal/releases/download/v2.6.3/prodigal.linux
+    chmod +x $BINARY
+
+    #
+    # Mount points for TACC directories
+    #
+    mkdir /home1
+    mkdir /scratch
+    mkdir /work
