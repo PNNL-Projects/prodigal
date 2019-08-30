@@ -1,0 +1,25 @@
+input_file:
+  class: File
+  path: /Users/kyclark/work/data/dolphin/test/test1.fa
+output_file:
+  test1.fa.out
+proteins_file:
+  test1.fa.proteins
+nucs_file:
+  test1.fa.nucleotides
+genes_file:
+  test1.fa.genes
+output_format:
+  gff
+translation_table:
+  11
+procedure:
+  single
+closed_ends:
+  false
+ns_as_masked:
+  false
+bypass_trainer:
+  false
+quiet:
+  false

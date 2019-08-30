@@ -1,0 +1,22 @@
+query:
+  test
+out_dir:
+  prodigal-out
+proteins_file:
+  true
+nucs_file:
+  true
+genes_file:
+  true
+output_format:
+  gff
+translation_table:
+  11
+procedure:
+  single
+closed_ends:
+  false
+ns_as_masked:
+  false
+bypass_trainer:
+  false
