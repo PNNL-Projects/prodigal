@@ -1,0 +1,4 @@
+{ 
+    "prodigal.query": "/Users/kyclark/work/data/dolphin/test", 
+    "prodigal.output_format": "gff" 
+}

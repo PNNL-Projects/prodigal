@@ -1,4 +1,0 @@
-{ 
-    "prodigal.input_file": "/Users/kyclark/work/data/dolphin/fasta/test.fa", 
-    "prodigal.output_format": "gff" 
-}

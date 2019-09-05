@@ -1,11 +1,20 @@
 #!/usr/bin/env cwl-runner
 
 cwlVersion: v1.0
+
 class: CommandLineTool
+id: prodigal
+label: prodigal
+dct:creator:
+  '@id': http://orcid.org/0000-0001-9961-144X
+  foaf:name: Ken Youens-Clark
+  foaf:mbox: mailto:kyclark@email.arizona.edu
+
 hints:
   DockerRequirement:
     dockerPull: hurwitzlab/prodigal:2.6.3
 baseCommand: run_prodigal
+
 inputs:
   query:
     type: string
@@ -62,10 +71,12 @@ inputs:
     inputBinding:
       position: 1
       prefix: -s 
+
 outputs:
   prodigal_stdout:
     type: stdout
   prodigal_stderr:
     type: stderr
+
 stdout: stdout.txt
 stderr: stderr.txt
