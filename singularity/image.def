@@ -2,7 +2,7 @@ BootStrap: docker
 From: hurwitzlab/prodigal:2.6.3
 
 %runscript
-    exec prodigal "$@"
+    exec run_prodigal "$@"
 
 %post
     mkdir /home1

@@ -1,20 +1,15 @@
 SINGULARITY = /usr/local/bin/singularity
-IMG_NAME = prodigal-2.6.3.img
-DEF_NAME = image.def
-SIZE = 512
+IMG = prodigal-2.6.3.img
+DEF = image.def
 
 run:
-	sudo $(SINGULARITY) run $(IMG_NAME)
+	sudo $(SINGULARITY) run $(IMG)
 
 clean:
-	rm -f $(IMG_NAME)
+	rm -f $(IMG)
 
 img: clean
-	sudo $(SINGULARITY) create --size $(SIZE) $(IMG_NAME)
-	sudo $(SINGULARITY) bootstrap $(IMG_NAME) $(DEF_NAME)
+	sudo $(SINGULARITY) build $(IMG) $(DEF)
 
 shell:
-	sudo $(SINGULARITY) shell --writable -B $(shell pwd):/tmp $(IMG_NAME)
-
-scp:
-	scp $(IMG_NAME) stampede:/work/03137/kyclark/prodigal-2.6.3/stampede
+	sudo $(SINGULARITY) shell --writable -B $(shell pwd):/tmp $(IMG)
