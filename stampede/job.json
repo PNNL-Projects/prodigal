@@ -1,15 +1,13 @@
 {
-  "name":"prodigal test-1516639665",
+  "name":"prodigal-test",
   "appId": "prodigal-2.6.3",
   "batchQueue": "normal",
-  "executionSystem": "tacc-stampede2-kyclark",
   "maxRunTime": "12:00:00",
   "memoryPerNode": "32GB",
   "nodeCount": 1,
   "processorsPerNode": 16,
   "archive": true,
   "archiveSystem": "data.iplantcollaborative.org",
-  "archivePath": null,
   "inputs": {
     "QUERY": [ 
       "kyclark/data/prodigal/JGI_AMD_5WAY_IRNMTN_SMPL_20020301.fa"
